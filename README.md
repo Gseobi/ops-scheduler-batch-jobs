@@ -198,6 +198,6 @@ Scheduler, InquiryService, StoreClient, FormService, Repository의 책임을 나
 
 ## 12. Documents
 
-- `docs/design-notes.md`
-- `docs/test-report.md`
-- `docs/troubleshooting.md`
+- [Design Notes](docs/design-notes.md)
+- [Test Report](docs/test-report.md)
+- [Troubleshooting Notes](docs/troubleshooting.md)
