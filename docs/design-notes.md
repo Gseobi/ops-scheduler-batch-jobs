@@ -9,7 +9,7 @@
 이 문서는 해당 구조를 선택한 이유와  
 주요 설계 판단을 정리한 문서입니다.
 
----
+<br/>
 
 ## 2. Why a Scheduler-based Batch Structure Was Needed
 
@@ -29,7 +29,7 @@
 실행 제어 / 외부 연동 / 정규화 / 저장 책임을 나눈  
 배치 구조가 필요하다고 판단했습니다.
 
----
+<br/>
 
 ## 3. Why Execution Control Was Important
 
@@ -47,7 +47,7 @@
 - 외부 연동 실패 시 재시도 가능성 확보
 - 최소한의 운영 확인 수단 제공
 
----
+<br/>
 
 ## 4. Why Group-based Distributed Scheduling Was Chosen
 
@@ -66,7 +66,7 @@
 운영 환경에서 스케줄 충돌 가능성을 낮추기 위한  
 기본적인 실행 분산 전략을 설명하는 데 목적이 있습니다.
 
----
+<br/>
 
 ## 5. Why Responsibility Was Separated
 
@@ -94,7 +94,7 @@
 이 구조를 통해 각 계층의 역할을 분명히 하고,  
 외부 연동이나 저장소 구현이 변경되어도 전체 흐름을 크게 흔들지 않도록 했습니다.
 
----
+<br/>
 
 ## 6. Why Retry with Backoff Was Considered
 
@@ -115,7 +115,7 @@
 즉, 재시도는 단순 예외 보완이 아니라  
 배치 구조의 복원력을 높이기 위한 설계 요소로 보았습니다.
 
----
+<br/>
 
 ## 7. Why Lock Was Added
 
@@ -136,7 +136,7 @@
 즉, 본 프로젝트의 Lock은 완전한 운영 구현이라기보다  
 **중복 실행 제어가 왜 필요한지**를 구조적으로 설명하기 위한 설계 요소입니다.
 
----
+<br/>
 
 ## 8. Why Operational Visibility Was Included
 
@@ -161,7 +161,7 @@
 이는 실제 운영용 Admin 시스템 전체를 구현한 것은 아니지만,  
 배치가 “보이게 운영되어야 한다”는 관점을 반영한 것입니다.
 
----
+<br/>
 
 ## 9. Why This Project Was Reconstructed as a Portfolio
 
@@ -184,7 +184,7 @@ Mock Client, InMemory Repository를 사용해
 즉, 이 프로젝트의 핵심은 외부 스토어 연동 구현 자체보다  
 **운영형 배치 구조와 책임 분리 방식**을 보여주는 데 있습니다.
 
----
+<br/>
 
 ## 10. Summary
 

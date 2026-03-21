@@ -9,7 +9,7 @@
 이 문서는 프로젝트 구현 및 검증 과정에서 중요하게 본 이슈와  
 그에 대한 대응 방향을 정리한 문서입니다.
 
----
+<br/>
 
 ## 2. Duplicate Execution in a Redundant Server Environment
 
@@ -43,7 +43,7 @@
 - execution ownership 관리
 - 배치 실행 상태 테이블 기반 제어
 
----
+<br/>
 
 ## 3. External Integration Failure
 
@@ -71,7 +71,7 @@
 - provider 또는 store별 오류 코드 매핑
 - circuit breaker 성격의 보호 구조 검토
 
----
+<br/>
 
 ## 4. Tight Coupling Between Scheduler and Business Logic
 
@@ -94,7 +94,7 @@ Scheduler 내부에 비즈니스 처리, 외부 연동, 데이터 가공, 저장
 
 이를 통해 실행 제어와 비즈니스 처리를 느슨하게 분리했습니다.
 
----
+<br/>
 
 ## 5. Lack of Operational Visibility
 
@@ -128,7 +128,7 @@ Scheduler 내부에 비즈니스 처리, 외부 연동, 데이터 가공, 저장
 - 실패 건 목록 및 재처리 기능
 - traceId / executionId 기반 추적
 
----
+<br/>
 
 ## 6. Retry Without Clear Failure Classification
 
@@ -160,7 +160,7 @@ Scheduler 내부에 비즈니스 처리, 외부 연동, 데이터 가공, 저장
 - dead-letter 성격의 보류 처리
 - 실패 건 후속 재처리 구조
 
----
+<br/>
 
 ## 7. InMemory Repository and Lock Limitations
 
@@ -190,7 +190,7 @@ Scheduler 내부에 비즈니스 처리, 외부 연동, 데이터 가공, 저장
 - 실행 상태 영속화
 - 다중 인스턴스 환경 검증
 
----
+<br/>
 
 ## 8. What This Project Focuses On
 
@@ -207,7 +207,9 @@ Scheduler 내부에 비즈니스 처리, 외부 연동, 데이터 가공, 저장
 단순 예외 처리 목록이 아니라,  
 운영형 배치 구조에서 실제로 중요할 수 있는 이슈를 기준으로 정리한 것입니다.
 
----
+포트폴리오에서는 InMemory 기반으로 단순화했지만, 실제 운영 환경으로 확장 가능한 방향을 함께 설명하는 데 목적이 있습니다.
+
+<br/>
 
 ## 9. Summary
 
