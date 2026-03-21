@@ -179,3 +179,6 @@
 
 ### Inquiry Service Test
 ![ReviewsInquiryServiceTest](images/test-reviews-service.png)
+
+## 8. CI Snapshot
+![GitHub Actions Pass](images/github-actions-pass.png)

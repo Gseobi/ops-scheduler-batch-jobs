@@ -1,5 +1,7 @@
 # ops-scheduler-batch-jobs
 
+[![CI](https://github.com/Gseobi/ops-scheduler-batch-jobs/actions/workflows/ci.yml/badge.svg)](https://github.com/Gseobi/ops-scheduler-batch-jobs/actions/workflows/ci.yml)
+
 운영 환경에서 사용되던 **스케줄러 기반 배치 작업 구조**를 포트폴리오 목적에 맞게 재구성한 프로젝트입니다.  
 서버 이중화 환경에서의 **중복 실행 방지(시간 분산)**, 외부 연동 책임 분리, 재시도, 실행 결과 가시성을 중심으로 설계했습니다.
 
