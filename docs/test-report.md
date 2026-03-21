@@ -166,16 +166,16 @@
 ## 7. Test Report Snapshot
 
 ### Overall Summary
-![Test Summary](image/test-summary-report.png)
+![Test Summary](images/test-summary-report.png)
 
 ### Scheduler Test
-![ReviewFetchSchedulerTest](image/test-fetch-scheduler.png)
+![ReviewFetchSchedulerTest](images/test-fetch-scheduler.png)
 
 ### Retry Test
-![RetryExecutorTest](image/test-retry-executor.png)
+![RetryExecutorTest](images/test-retry-executor.png)
 
 ### Controller Test
-![ReviewsControllerTest](image/test-reviews-controller.png)
+![ReviewsControllerTest](images/test-reviews-controller.png)
 
 ### Inquiry Service Test
-![ReviewsInquiryServiceTest](image/test-reviews-service.png)
+![ReviewsInquiryServiceTest](images/test-reviews-service.png)
