@@ -8,15 +8,14 @@
 실행 분산, 외부 연동 책임 분리, 재시도, 중복 실행 방지, 운영 확인 가능성을  
 어떻게 구조화했는지 보여주는 데 목적이 있습니다.
 
-검증은 아래 두 방향을 기준으로 정리했습니다.
+검증은 아래 두 방향을 기준으로 수행했습니다.
 
+- **자동화 테스트**
+  - Spring Boot Test 기반 Controller / Scheduler / Service / Retry 테스트
+  - 그룹 분산 실행, 운영 확인 API, 재시도, 중복 실행 방지 흐름 검증
 - **구조 검증**
-  - 그룹별 시간 분산 실행 구조
   - Scheduler / InquiryService / StoreClient / FormService / Repository 책임 분리
-- **흐름 검증**
-  - 재시도(Backoff) 흐름
-  - Lock 기반 중복 실행 방지 흐름
-  - 운영 확인 API를 통한 결과 조회 가능 여부
+  - Mock 기반 외부 연동 구조와 InMemory Lock 구조 검증
 
 <br/>
 
@@ -28,100 +27,90 @@
 - Mock Store Client
 - InMemory Repository
 - Local Profile
+- Gradle Test Report
 
 <br/>
 
-## 3. Verification Coverage
+## 3. Automated Test Coverage
 
-### 3.1 Group-based Distributed Scheduling
-**Scenario**  
-서버 그룹에 따라 배치 실행 시점을 분산했을 때, 동일한 시점에 모든 그룹이 동시에 실행되지 않는 구조인지 확인
+### 3.1 Application Context Load
+**Test Class**
+- `OpsSchedulerApplicationTests`
 
-**Expected**
-- Group A / Group B가 서로 다른 시간대에 실행됨
-- 동일 배치의 시간 충돌 가능성이 줄어듦
+**Purpose**
+- 애플리케이션 컨텍스트가 정상적으로 로딩되는지 확인
 
 **Result**
 - Pass
 
 <br/>
 
-### 3.2 Scheduler to Inquiry Flow
-**Scenario**  
-Scheduler가 실행되었을 때 InquiryService가 호출되고, 조회 대상 루프가 정상적으로 진행되는지 확인
+### 3.2 Group-based Distributed Scheduling
+**Test Class**
+- `ReviewFetchSchedulerTest`
+
+**Scenario**
+- 서버 그룹 A이고 enabled=true면 Group A 스케줄이 실행된다
+- 락이 이미 잡혀 있으면 실행을 건너뛴다
 
 **Expected**
-- Scheduler가 실행 트리거 역할 수행
-- InquiryService가 대상 반복 처리 흐름을 담당
-- 상위 실행 흐름이 분리된 책임 구조로 동작
+- Group A 조건에서 `fetchAll("SCH-A")` 실행
+- Lock이 이미 잡혀 있으면 중복 실행 방지
 
 **Result**
 - Pass
 
 <br/>
 
-### 3.3 External Client Integration Flow
-**Scenario**  
-InquiryService가 외부 조회 책임을 StoreClient에 위임하고, Mock 응답을 기준으로 후속 처리가 이어지는지 확인
+### 3.3 Retry with Backoff
+**Test Class**
+- `RetryExecutorTest`
+
+**Scenario**
+- 실패 후 재시도 끝에 성공하면 결과 반환
+- 최대 재시도 이후에도 실패하면 예외 발생
 
 **Expected**
-- 외부 연동 책임이 StoreClient에 한정됨
-- 상위 계층은 전체 흐름만 조정함
+- 재시도 후 성공 시 정상 결과 반환
+- 최대 재시도 이후에도 실패하면 예외 전파
 
 **Result**
 - Pass
 
 <br/>
 
-### 3.4 Normalization and Repository Save
-**Scenario**  
-외부 응답 데이터가 FormService를 통해 내부 표준 형식으로 정규화되고, Repository에 저장되는지 확인
+### 3.4 Operational Visibility APIs
+**Test Class**
+- `ReviewsControllerTest`
 
-**Expected**
-- FormService가 응답 데이터를 정규화
-- Repository가 저장 및 조회 책임 수행
-- 저장 후 운영 확인 API를 통해 조회 가능
-
-**Result**
-- Pass
-
-<br/>
-
-### 3.5 Retry with Backoff
-**Scenario**  
-외부 연동 실패가 발생했을 때 즉시 종료하지 않고 재시도 흐름이 적용되는지 확인
-
-**Expected**
-- 실패 시 재시도 흐름 진입
-- 재시도 정책이 전체 배치 구조 안에서 동작
-- 일시적 실패에 대해 복원력 있는 흐름 유지
-
-**Result**
-- Pass
-
-<br/>
-
-### 3.6 Lock-based Duplicate Execution Prevention
-**Scenario**  
-동일 배치가 중복 실행될 가능성이 있는 상황에서 Lock이 중복 실행 방지 흐름에 반영되는지 확인
-
-**Expected**
-- Lock 획득 여부에 따라 중복 실행 제어 가능
-- 동일 작업이 동시에 반복 실행되지 않음
-
-**Result**
-- Pass
-
-<br/>
-
-### 3.7 Operational Visibility APIs
-**Scenario**  
-운영 확인용 API를 통해 수동 실행, 최근 결과 조회, 단건 조회가 가능한지 확인
+**Scenario**
+- 수동 실행 API가 정상 응답한다
+- 최근 리뷰 조회 API가 정상 응답한다
+- 단건 리뷰 조회 API가 정상 응답한다
+- 잘못된 platform 요청 시 예외가 발생한다
 
 **Expected**
 - `POST /ops/reviews/fetch` 수동 실행 가능
-- `GET /ops/reviews?limit=50` 최근 결과 조회 가능
+- `GET /ops/reviews?limit=...` 최근 결과 조회 가능
 - `GET /ops/reviews/inquiry?...` 단건 조회 가능
+- 잘못된 platform 입력은 예외로 처리됨
+
+**Result**
+- Pass
+
+<br/>
+
+### 3.5 Inquiry Service Flow
+**Test Class**
+- `ReviewsInquiryServiceTest`
+
+**Scenario**
+- 지원하지 않는 store에 대한 client가 없으면 해당 대상은 저장되지 않는다
+
+**Expected**
+- 지원되는 StoreClient만 처리됨
+- 미지원 store 대상은 전체 흐름을 중단시키지 않음
+- 저장 결과는 지원되는 store 기준으로만 반영됨
 
 **Result**
 - Pass
@@ -154,11 +143,10 @@ InquiryService가 외부 조회 책임을 StoreClient에 위임하고, Mock 응�
 
 - 그룹별 시간 분산 실행 구조
 - Scheduler 기반 배치 실행 흐름
-- 외부 연동 책임 분리
-- 응답 데이터 정규화 및 저장 흐름
-- 재시도(Backoff) 구조
+- RetryExecutor 기반 재시도 구조
 - Lock 기반 중복 실행 방지 구조
 - 운영 확인 API를 통한 결과 가시성
+- 지원되는 StoreClient만 처리하는 InquiryService 흐름
 
 이를 통해 `ops-scheduler-batch-jobs`는  
 단순한 스케줄러 샘플이 아니라,  
@@ -171,4 +159,23 @@ InquiryService가 외부 조회 책임을 StoreClient에 위임하고, Mock 응�
 - 본 프로젝트는 실제 외부 스토어 연동이 아닌 Mock 기반 구조를 기준으로 검증했습니다.
 - Lock은 포트폴리오용 InMemory 구조를 사용했습니다.
 - 검증 목적은 실제 운영 환경의 완전한 재현보다는 스케줄 실행 제어와 책임 분리 구조를 설명하는 데 있습니다.
-- 실행 결과 스냅샷은 `docs/image/**` 경로에 반영할 수 있습니다.
+- 잘못된 platform 입력은 현재 구현 기준으로 예외를 직접 발생시키는 방식으로 처리합니다.
+
+<br/>
+
+## 7. Test Report Snapshot
+
+### Overall Summary
+![Test Summary](image/test-summary-report.png)
+
+### Scheduler Test
+![ReviewFetchSchedulerTest](image/test-fetch-scheduler.png)
+
+### Retry Test
+![RetryExecutorTest](image/test-retry-executor.png)
+
+### Controller Test
+![ReviewsControllerTest](image/test-reviews-controller.png)
+
+### Inquiry Service Test
+![ReviewsInquiryServiceTest](image/test-reviews-service.png)
