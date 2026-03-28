@@ -208,10 +208,18 @@ Scheduler, REST API, 테스트를 하나의 구조 안에서 설명하기에 적
 
 </br>
 
-## 8. Blog / Notes
+## 8. Notes / Blog
 
 ### Project Docs
 
 - [Design Notes](docs/design-notes.md)
 - [Test Report](docs/test-report.md)
 - [Troubleshooting Notes](docs/troubleshooting.md)
+
+### Blog
+
+이 프로젝트의 설계 배경과 운영 환경에서의 실행 제어 기준은 아래 글에 정리했습니다.
+
+[이중화 환경에서 Scheduler와 Batch를 어떻게 안전하게 실행할 것인가](https://velog.io/@wsx2386/%EC%9D%B4%EC%A4%91%ED%99%94-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-Scheduler%EC%99%80-Batch%EB%A5%BC-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%95%88%EC%A0%84%ED%95%98%EA%B2%8C-%EC%8B%A4%ED%96%89%ED%95%A0-%EA%B2%83%EC%9D%B8%EA%B0%80)
+ 
+Keywords: `Scheduler`, `Batch`, `Distributed Execution`, `Retry Policy`, `Operational Visibility`, `Execution Guard`
