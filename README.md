@@ -21,6 +21,22 @@
 
 ## 2. Execution Evidence
 
+### Batch Execution Control Diagram
+
+<div align="center">
+  <img src="docs/images/batch-execution-control-flow.png" alt="Batch Execution Control Flow" width="960" />
+</div>
+
+<div align="center">
+  <sub>
+    Source:
+    <a href="docs/diagram/batch-execution-control-flow.drawio">draw.io</a> ·
+    <a href="docs/pdf/batch-execution-control-flow.pdf">PDF</a>
+  </sub>
+</div>
+
+<br/>
+
 ### Verification Summary
 
 | Scenario | Expected Behavior | Result | Evidence |
@@ -31,20 +47,6 @@
 | Retry with backoff | 외부 조회 실패 시 재시도 흐름 동작 | Pass | `docs/test-report.md` |
 | Ops API verification | 수동 실행 / 최근 결과 조회 / 단건 조회 API 동작 | Pass | `docs/test-report.md` |
 | CI regression check | build / test 자동화 기반 기본 회귀 확인 | Pass | GitHub Actions |
-
-### Representative Execution Flow
-
-```mermaid
-flowchart TD
-    A[Scheduler Trigger] --> B[Group A / Group B Routing]
-    B --> C[Lock Check]
-    C --> D[InquiryService]
-    D --> E[StoreClient Mock]
-    E --> F[RetryExecutor]
-    F --> G[FormService]
-    G --> H[Repository]
-    H --> I[Ops API / Result Inquiry]
-```
 
 ### Example Execution Log
 
